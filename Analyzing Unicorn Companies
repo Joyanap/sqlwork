@@ -10,43 +10,43 @@ and their average valuation, converted to billions of dollars and rounded to two
 ------------------------------------------------------------------------------------------------------
 WITH top_industries AS
 (
-SELECT		  i.industry,
-			      COUNT(i.*) AS count
-FROM		    industries AS i
+SELECT		i.industry,
+		COUNT(i.*) AS count
+FROM		industries AS i
 INNER JOIN	dates AS d
-ON			    i.company_id = d.company_id
-WHERE		    EXTRACT(year FROM d.date_joined) IN ('2019', '2020', '2021')
-GROUP BY	  industry
-ORDER BY	  COUNT(*) DESC
-LIMIT		    3
+ON		i.company_id = d.company_id
+WHERE		EXTRACT(year FROM d.date_joined) IN ('2019', '2020', '2021')
+GROUP BY	industry
+ORDER BY	COUNT(*) DESC
+LIMIT		3
 ),
 
 ranking_by_year AS
 (
-SELECT		  COUNT(i.*) AS num_unicorns,
-			      i.industry,
-			      EXTRACT(year FROM d.date_joined) AS year,
-			      AVG(f.valuation) AS avg_valuation
-FROM		    industries AS i
+SELECT		COUNT(i.*) AS num_unicorns,
+		i.industry,
+		EXTRACT(year FROM d.date_joined) AS year,
+		AVG(f.valuation) AS avg_valuation
+FROM		industries AS i
 INNER JOIN	dates AS d
-ON			    i.company_id = d.company_id
+ON		i.company_id = d.company_id
 INNER JOIN	funding AS f
-ON			    i.company_id = f.company_id
-GROUP BY	  industry,
-			      year	
+ON		i.company_id = f.company_id
+GROUP BY	industry,
+		year	
 )
 
 SELECT		industry,
-			    year,
-			    num_unicorns,
-			    ROUND(AVG(avg_valuation / 1000000000), 2) AS average_valuation_billions
-FROM		  ranking_by_year
-WHERE		  year in ('2019', '2020', '2021')
-			    AND industry in 
-			    (SELECT industry
-			    FROM top_industries)
+		year,
+		num_unicorns,
+		ROUND(AVG(avg_valuation / 1000000000), 2) AS average_valuation_billions
+FROM		ranking_by_year
+WHERE		year in ('2019', '2020', '2021')
+		AND industry in 
+		(SELECT industry
+		FROM top_industries)
 GROUP BY	industry,
-			    num_unicorns,
-			    year
+		num_unicorns,
+		year
 ORDER BY	year DESC,
-			    num_unicorns DESC;
+		num_unicorns DESC;
