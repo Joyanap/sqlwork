@@ -6,10 +6,10 @@ postgresql:///games
 -- Select all information for the top ten best-selling games
 -- Order the results from best-selling game down to tenth best-selling
 
-SELECT *
-FROM game_sales
-ORDER BY games_sold DESC
-LIMIT 10
+SELECT     *
+FROM       game_sales
+ORDER BY   games_sold DESC
+LIMIT      10
 
 ----------------------------------------------------------------------------------------
 2. Missing review scores
@@ -19,11 +19,11 @@ LIMIT 10
 -- Join games_sales and reviews
 -- Select a count of the number of games where both critic_score and user_score are null
 
-SELECT COUNT(a.game)
-FROM game_sales a
-LEFT JOIN reviews b
-ON a.game = b.game
-WHERE b.critic_score IS NULL AND b.user_score IS NULL;
+SELECT      COUNT(a.game)
+FROM        game_sales a
+LEFT JOIN   reviews b
+ON          a.game = b.game
+WHERE       b.critic_score IS NULL AND b.user_score IS NULL;
 
 ----------------------------------------------------------------------------------------
 3. Years that video game critics loved
